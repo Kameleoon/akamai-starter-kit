@@ -1,0 +1,19 @@
+{
+  "name": "akamai-starter-kit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kameleoon/akamai-starter-kit.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kameleoon/akamai-starter-kit/issues"
+  },
+  "homepage": "https://github.com/Kameleoon/akamai-starter-kit#readme"
+}
