@@ -1,4 +1,3 @@
-import { httpRequest } from "http-request";
 import fetch from "node-fetch";
 
 /**
