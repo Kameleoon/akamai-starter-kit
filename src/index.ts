@@ -8,9 +8,10 @@ import {
 } from "@kameleoon/nodejs-sdk";
 import { getClientConfig } from "./helpers";
 
-const KAMELEOON_SITE_CODE = "YOUR_SITE_CODE_HERE";
-const KAMELEOON_USER_ID = "kameleoon_user_id";
+const COOKIE_KAMELEOON_USER_ID = "kameleoon_user_id";
 const VARIABLE_NAME_USER_ID = "PMUSER_KAMELEOON_USER_ID";
+
+const KAMELEOON_SITE_CODE = "YOUR_SITE_CODE_HERE"; // your site code
 
 let logStash: string[] = [];
 
@@ -35,23 +36,23 @@ function logAndPrint(message: string) {
 
 /**
  * 1. User ID: Get the useId from cookie if it exists. Otherwise, generate a new userId.
- * 2. Client Configuration: Get the client configuration data from Kameleoon CDN based on given site code.
- * 3. Initialize KameleoonClient SDK: Create an instance of KameleoonClient using fetched client configuration.
- * 4. Use kameleoonClient instance to access SDK methods. Using methdos get result for this particular userId.
- * 5. Result: Return the result to the caller via appending headers or cookies to the callback function.
+ * 2. Save a User ID in request variable, so later in clientResponse you can retrieve it and pass it to user.
+ * 3. Client Configuration: Get the client configuration data from Kameleoon CDN based on given site code.
+ * 4. Initialize KameleoonClient SDK: Create an instance of KameleoonClient using fetched client configuration.
+ * 5. Use kameleoonClient instance to access SDK methods. Using methdos get result for this particular userId.
  */
 export async function onClientRequest(request: EW.IngressClientRequest) {
   logStash = [];
   const cookies = new Cookies(request.getHeader("Cookie"));
 
   // Get the useId from cookie if it exists. Otherwise, generate a new userId.
-  const userId = cookies.get(KAMELEOON_USER_ID) || generateRandomUserId();
+  const userId =
+    cookies.get(COOKIE_KAMELEOON_USER_ID) || generateRandomUserId();
 
   // onClientRequest handler does not allow setting the cookie. Saving the User ID in a variable
   // to be retrieved and set when onClientResponse handler is executed later on.
   request.setVariable(VARIABLE_NAME_USER_ID, userId);
 
-  // Add your site code here.
   const clientConfig = await getClientConfig(KAMELEOON_SITE_CODE);
 
   if (!clientConfig) {
@@ -73,17 +74,34 @@ export async function onClientRequest(request: EW.IngressClientRequest) {
 
   await kameleoonClient.initialize();
 
-  const featureKey = "YOUR_FEATURE_KEY";
+  const featureKey = "YOUR_FEATURE_KEY"; // your feature key
   const variationKey = kameleoonClient.getFeatureFlagVariationKey(
     userId,
     featureKey
   );
 
-  request.setVariable(featureKey, variationKey);
-
   logAndPrint(
     `[KAMELEOON] The variationKey of userId: ${userId} is ${variationKey}`
   );
+
+  sendGenericReponse(request, logStash);
+}
+
+/**
+ * 1. onClientRequest handler does not allow setting the cookie. We are saving the cookie in a variable and then settig it here.
+ */
+
+export async function onClientResponse(
+  request: EW.IngressClientRequest,
+  response: EW.EgressClientResponse
+): Promise<void> {
+  const userId = request.getVariable(VARIABLE_NAME_USER_ID);
+  const cookie = new SetCookie({
+    name: COOKIE_KAMELEOON_USER_ID,
+    value: userId,
+  });
+
+  response.setHeader("Set-Cookie", cookie.toHeader());
 }
 
 function sendGenericReponse(

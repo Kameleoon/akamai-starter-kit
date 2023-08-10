@@ -7,7 +7,7 @@ import { terser } from "rollup-plugin-terser";
 
 export default {
   input: "src/index.ts",
-  external: ["node-fetch", "cookie"],
+  external: ["http-request", "cookies", "log"],
   output: {
     format: "cjs",
     dir: "dist",
