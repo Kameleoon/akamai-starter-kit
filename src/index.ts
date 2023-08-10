@@ -1,4 +1,4 @@
-import { Cookies, SetCookie } from "cookies";
+import cookie from "cookie";
 import { getClientConfig } from "./helpers";
 
 const KAMELEOON_SITE_CODE = "YOUR_SITE_CODE_HERE";
@@ -34,10 +34,10 @@ function printLog(message: string) {
  */
 export async function onClientRequest(request) {
   logStash = [];
-  const cookies = new Cookies(request.getHeader("cookie"));
+  const cookies = cookie.parse(request.headers.get("Cookie") || "");
 
   // Get the useId from cookie if it exists. Otherwise, generate a new userId.
-  const userId = cookies.get(KAMELEOON_USER_ID) || generateRandomUserId();
+  const userId = cookies[KAMELEOON_USER_ID] || generateRandomUserId();
 
   // onClientRequest handler does not allow setting the cookie. Saving the User ID in a variable
   // to be retrieved and set when onClientResponse handler is executed later on.
