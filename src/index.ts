@@ -2,6 +2,10 @@
 
 import { Cookies, SetCookie } from "cookies";
 import { logger } from "log";
+import {
+  KameleoonClient,
+  GetClientConfigurationResultType,
+} from "@kameleoon/nodejs-sdk";
 import { getClientConfig } from "./helpers";
 
 const KAMELEOON_SITE_CODE = "YOUR_SITE_CODE_HERE";
@@ -58,6 +62,28 @@ export async function onClientRequest(request: EW.IngressClientRequest) {
     sendGenericReponse(request, logStash);
     return;
   }
+
+  const kameleoonClient = new KameleoonClient({
+    siteCode: KAMELEOON_SITE_CODE,
+    integrations: {
+      externalClientConfiguration:
+        clientConfig as GetClientConfigurationResultType,
+    },
+  });
+
+  await kameleoonClient.initialize();
+
+  const featureKey = "YOUR_FEATURE_KEY";
+  const variationKey = kameleoonClient.getFeatureFlagVariationKey(
+    userId,
+    featureKey
+  );
+
+  request.setVariable(featureKey, variationKey);
+
+  logAndPrint(
+    `[KAMELEOON] The variationKey of userId: ${userId} is ${variationKey}`
+  );
 }
 
 function sendGenericReponse(
