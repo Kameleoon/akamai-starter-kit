@@ -1,6 +1,7 @@
 /// <reference types="akamai-edgeworkers"/>
 
 import { Cookies, SetCookie } from "cookies";
+import { logger } from "log";
 import { getClientConfig } from "./helpers";
 
 const KAMELEOON_SITE_CODE = "YOUR_SITE_CODE_HERE";
@@ -22,9 +23,10 @@ function generateRandomUserId(): string {
   return userId;
 }
 
-// Helper function to print to the response body.
-function printLog(message: string) {
+// Helper function to log to the debug logger and print to the response body.
+function logAndPrint(message: string) {
   logStash.push(message);
+  logger.log(message);
 }
 
 /**
@@ -49,7 +51,7 @@ export async function onClientRequest(request: EW.IngressClientRequest) {
   const clientConfig = await getClientConfig(KAMELEOON_SITE_CODE);
 
   if (!clientConfig) {
-    printLog(
+    logAndPrint(
       "[KAMELEOON] Failed to fetch the client cofiguration, please check the site code"
     );
 
