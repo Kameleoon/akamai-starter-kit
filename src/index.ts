@@ -1,4 +1,6 @@
-import cookie from "cookie";
+/// <reference types="akamai-edgeworkers"/>
+
+import { Cookies, SetCookie } from "cookies";
 import { getClientConfig } from "./helpers";
 
 const KAMELEOON_SITE_CODE = "YOUR_SITE_CODE_HERE";
@@ -32,12 +34,12 @@ function printLog(message: string) {
  * 4. Use kameleoonClient instance to access SDK methods. Using methdos get result for this particular userId.
  * 5. Result: Return the result to the caller via appending headers or cookies to the callback function.
  */
-export async function onClientRequest(request) {
+export async function onClientRequest(request: EW.IngressClientRequest) {
   logStash = [];
-  const cookies = cookie.parse(request.headers.get("Cookie") || "");
+  const cookies = new Cookies(request.getHeader("Cookie"));
 
   // Get the useId from cookie if it exists. Otherwise, generate a new userId.
-  const userId = cookies[KAMELEOON_USER_ID] || generateRandomUserId();
+  const userId = cookies.get(KAMELEOON_USER_ID) || generateRandomUserId();
 
   // onClientRequest handler does not allow setting the cookie. Saving the User ID in a variable
   // to be retrieved and set when onClientResponse handler is executed later on.
@@ -56,7 +58,10 @@ export async function onClientRequest(request) {
   }
 }
 
-function sendGenericReponse(request, logStash) {
+function sendGenericReponse(
+  request: EW.IngressClientRequest,
+  logStash: string[]
+) {
   request.respondWith(
     200,
     { "Content-Type": "text/plain" },

@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { httpRequest } from "http-request";
 
 /**
  * getClientConfig - Retrieves the client configuration from the Kameeloon CDN.
@@ -12,7 +12,7 @@ export async function getClientConfig(
   // Akamai edgeworkers do not provide a way to cache the response through code.
   // In order to cache, make sure to enable caching to outgoing request from Akamai control panel
   // https://techdocs.akamai.com/purge-cache/docs/cache-strategies
-  const response = await fetch(
+  const response = await httpRequest(
     `https://client-config.kameleoon.com/mobile?siteCode=${siteCode}`
   );
 
