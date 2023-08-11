@@ -1,6 +1,17 @@
 import { httpRequest } from "http-request";
 
 /**
+ * generateRandomUserId - Generates a random User ID.
+ *
+ * @returns string
+ */
+export function generateRandomUserId(): string {
+  const userId = (Math.random() + 1).toString(32).substring(2);
+
+  return userId;
+}
+
+/**
  * getClientConfig - Retrieves the client configuration from the Kameeloon CDN.
  *
  * @param string siteCode

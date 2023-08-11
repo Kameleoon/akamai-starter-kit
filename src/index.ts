@@ -6,27 +6,14 @@ import {
   KameleoonClient,
   GetClientConfigurationResultType,
 } from "@kameleoon/nodejs-sdk";
-import { getClientConfiguration } from "./helpers";
+import { getClientConfiguration, generateRandomUserId } from "./helpers";
 
-const COOKIE_KAMELEOON_USER_ID = "kameleoon_user_id";
+const KAMELEOON_USER_ID = "kameleoon_user_id";
 const VARIABLE_NAME_USER_ID = "PMUSER_KAMELEOON_USER_ID";
 
 const KAMELEOON_SITE_CODE = "YOUR_SITE_CODE_HERE"; // your site code
 
 let logStash: string[] = [];
-
-/**
- * generateRandomUserId - Generates a random User ID.
- *
- * @returns string
- */
-function generateRandomUserId(): string {
-  // console.log("[KAMELEOON] Generating new random User ID...");
-  const userId = (Math.random() + 1).toString(32).substring(2);
-  // console.log(`[KAMELEOON] Generated User ID: ${userId}`);
-
-  return userId;
-}
 
 // Helper function to log to the debug logger and print to the response body.
 function logAndPrint(message: string) {
@@ -46,8 +33,7 @@ export async function onClientRequest(request: EW.IngressClientRequest) {
   const cookies = new Cookies(request.getHeader("Cookie"));
 
   // Get the useId from cookie if it exists. Otherwise, generate a new userId.
-  const userId =
-    cookies.get(COOKIE_KAMELEOON_USER_ID) || generateRandomUserId();
+  const userId = cookies.get(KAMELEOON_USER_ID) || generateRandomUserId();
 
   // onClientRequest handler does not allow setting the cookie. Saving the User ID in a variable
   // to be retrieved and set when onClientResponse handler is executed later on.
@@ -90,14 +76,13 @@ export async function onClientRequest(request: EW.IngressClientRequest) {
 /**
  * 1. onClientRequest handler does not allow setting the cookie. We are saving the cookie in a variable and then settig it here.
  */
-
 export async function onClientResponse(
   request: EW.IngressClientRequest,
   response: EW.EgressClientResponse
 ): Promise<void> {
   const userId = request.getVariable(VARIABLE_NAME_USER_ID);
   const cookie = new SetCookie({
-    name: COOKIE_KAMELEOON_USER_ID,
+    name: KAMELEOON_USER_ID,
     value: userId,
   });
 
