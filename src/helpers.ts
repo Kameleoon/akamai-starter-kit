@@ -6,7 +6,7 @@ import { httpRequest } from "http-request";
  * @param string siteCode
  * @returns client config JSON object or null in case of error
  */
-export async function getClientConfig(
+export async function getClientConfiguration(
   siteCode: string
 ): Promise<unknown | null> {
   // Akamai edgeworkers do not provide a way to cache the response through code.

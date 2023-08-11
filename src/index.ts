@@ -6,7 +6,7 @@ import {
   KameleoonClient,
   GetClientConfigurationResultType,
 } from "@kameleoon/nodejs-sdk";
-import { getClientConfig } from "./helpers";
+import { getClientConfiguration } from "./helpers";
 
 const COOKIE_KAMELEOON_USER_ID = "kameleoon_user_id";
 const VARIABLE_NAME_USER_ID = "PMUSER_KAMELEOON_USER_ID";
@@ -53,7 +53,7 @@ export async function onClientRequest(request: EW.IngressClientRequest) {
   // to be retrieved and set when onClientResponse handler is executed later on.
   request.setVariable(VARIABLE_NAME_USER_ID, userId);
 
-  const clientConfig = await getClientConfig(KAMELEOON_SITE_CODE);
+  const clientConfig = await getClientConfiguration(KAMELEOON_SITE_CODE);
 
   if (!clientConfig) {
     logAndPrint(
