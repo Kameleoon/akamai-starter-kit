@@ -14,18 +14,16 @@ export function generateRandomUserId(): string {
 /**
  * getClientConfig - Retrieves the client configuration from the Kameeloon CDN.
  *
- * @param string siteCode
+ * @param string Kameleoon Client Configuration URL
  * @returns client config JSON object or null in case of error
  */
 export async function getClientConfiguration(
-  siteCode: string
+  url: string
 ): Promise<unknown | null> {
   // Akamai edgeworkers do not provide a way to cache the response through code.
   // In order to cache, make sure to enable caching to outgoing request from Akamai control panel
   // https://techdocs.akamai.com/purge-cache/docs/cache-strategies
-  const response = await httpRequest(
-    `https://client-config.kameleoon.com/mobile?siteCode=${siteCode}`
-  );
+  const response = await httpRequest(url);
 
   if (response.ok) {
     return await response.json();
