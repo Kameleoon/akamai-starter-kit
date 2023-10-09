@@ -2,17 +2,15 @@
 
 import { Cookies, SetCookie } from "cookies";
 import { logger } from "log";
-import {
-  KameleoonClient,
-  KameleoonUtils,
-  GetClientConfigurationResultType,
-} from "@kameleoon/nodejs-sdk";
+import { KameleoonClient } from "./kameleoonClient";
 import { getClientConfiguration, generateRandomUserId } from "./helpers";
+import { GetClientConfigurationResultType } from "@kameleoon/javascript-sdk-core";
+import { httpRequest } from "http-request";
 
 const KAMELEOON_USER_ID = "kameleoon_user_id";
 const VARIABLE_NAME_USER_ID = "PMUSER_KAMELEOON_USER_ID";
 
-const KAMELEOON_SITE_CODE = "YOUR_SITE_CODE_HERE"; // your site code
+const KAMELEOON_SITE_CODE = "5gswtw0aep"; // your site code
 
 let logStash: string[] = [];
 
@@ -41,37 +39,45 @@ export async function onClientRequest(request: EW.IngressClientRequest) {
   request.setVariable(VARIABLE_NAME_USER_ID, userId);
 
   // Get the Kameleoon Client Configuration URL from KameleoonUtils
-  const url = KameleoonUtils.getClientConfigurationUrl(KAMELEOON_SITE_CODE);
+  // const url = KameleoonCoreUtils.;
 
-  const clientConfig = await getClientConfiguration(url);
+  // const clientConfig = await getClientConfiguration(
+  //   `https://client-config.kameleoon.com/mobile?siteCode=${KAMELEOON_SITE_CODE}`
+  // );
 
-  if (!clientConfig) {
-    logAndPrint(
-      "[KAMELEOON] Failed to fetch the client cofiguration, please check the site code"
-    );
-
-    sendGenericReponse(request, logStash);
-    return;
-  }
-
-  const kameleoonClient = new KameleoonClient({
-    siteCode: KAMELEOON_SITE_CODE,
-    integrations: {
-      externalClientConfiguration:
-        clientConfig as GetClientConfigurationResultType,
-    },
-  });
-
-  await kameleoonClient.initialize();
-
-  const featureKey = "YOUR_FEATURE_KEY"; // your feature key
-  const variationKey = kameleoonClient.getFeatureFlagVariationKey(
-    userId,
-    featureKey
+  const response = await httpRequest(
+    `https://client-config.kameleoon.com/mobile?siteCode=${KAMELEOON_SITE_CODE}`
   );
 
+  logAndPrint("[KAMELEOON] client config: " + response.ok);
+
+  // if (clientConfig === "") {
+  //   logAndPrint(
+  //     "[KAMELEOON] Failed to fetch the client cofiguration, please check the site code"
+  //   );
+
+  //   sendGenericReponse(request, logStash);
+  //   return;
+  // }
+
+  // const kameleoonClient = new KameleoonClient({
+  //   siteCode: KAMELEOON_SITE_CODE,
+  //   integrations: {
+  //     externalClientConfiguration:
+  //       clientConfig as GetClientConfigurationResultType,
+  //   },
+  // });
+
+  // await kameleoonClient.initialize();
+
+  // const featureKey = "test_integration_of_compute_edge"; // your feature key
+  // const variationKey = kameleoonClient.getFeatureFlagVariationKey(
+  //   userId,
+  //   featureKey
+  // );
+
   logAndPrint(
-    `[KAMELEOON] The variationKey of userId: ${userId} is ${variationKey}`
+    `[KAMELEOON] The variationKey of userId: ${userId} is ${"variationKey"}`
   );
 
   sendGenericReponse(request, logStash);

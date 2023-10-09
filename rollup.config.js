@@ -6,10 +6,10 @@ import json from "@rollup/plugin-json";
 import { terser } from "rollup-plugin-terser";
 
 export default {
-  input: "src/index.ts",
+  input: "src/main.ts",
   external: ["http-request", "cookies", "log"],
   output: {
-    format: "cjs",
+    format: "es",
     dir: "dist",
   },
   preserveModules: false,

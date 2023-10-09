@@ -62,7 +62,7 @@ In the `src` folder of the starter kit, you'll find two Typescript files:
 7. Install node modules.
 
 ```
-npm install
+yarn
 ```
 
 8. Add your Kameleoon `siteCode` and `featureKey` in `src/index.ts`. They can be found in the Kameleoon application.
@@ -70,7 +70,7 @@ npm install
 9. Build the bundle.
 
 ```
-npm run build
+yarn build
 ```
 
 10. Upload the bundle
