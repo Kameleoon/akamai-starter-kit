@@ -46,7 +46,18 @@ export async function onClientResponse(
       output: response,
     });
 
+    // -- Get the variation for the visitor under visitorCode in the found feature flag
+    const variation = client.getVariation({
+      visitorCode,
+      featureKey: "YOUR_FEATURE_KEY",
+    });
+
+    // -- Get the value of the variable from the found feature flag
+    const current_string_variable =
+      variation.variables.get("YOUR_VARIABLE_NAME");
+
     response.setHeader("X-visitor-code", visitorCode);
+    response.setHeader("X-custom-variable", String(current_string_variable));
   } catch (error) {
     response.setHeader("X-Client-Error", String(error));
   }
