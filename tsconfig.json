@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2020",
+    "allowJs": true,
     "strict": true,
     "preserveConstEnums": true,
     "noEmit": true,

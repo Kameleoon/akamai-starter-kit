@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf dist && tsc --noEmit && rollup -c",
-    "build:tar": "rm -rf dist && tsc --noEmit && rollup -c && cd dist && tar -czvf bundle.tgz bundle.json main.js && rm bundle.json main.js",
-    "build:esbuild": "npx esbuild --bundle \"dist/main.js\" --outfile=\"dist/main.js\" --platform=node --format=cjs --minify"
+    "deploy": "tar -czvf dist/bundle.tgz -C dist main.js bundle.json edgekv.js edgekv_tokens.js && akamai edgeworkers upload --bundle dist/bundle.tgz "
   },
   "repository": {
     "type": "git",
@@ -36,6 +35,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@kameleoon/javascript-sdk-core": "/home/esen/Documents/work/javascript-sdk-packages/packages/javascript-sdk-core/kameleoon-javascript-sdk-core-v2.9.0.tgz"
+    "@kameleoon/nodejs-sdk": "^5.1.0"
   }
 }

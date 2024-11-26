@@ -1,4 +1,9 @@
 {
-  "edgeworker-version": "0.1",
-  "description" : "Kameleoon starter kit for Akamai Edgeworkers"
+  "edgeworker-version": "0.1.3",
+  "description": "Kameleoon starter kit for Akamai Edgeworkers",
+  "config": {
+    "logging": {
+      "level": "info"
+    }
+  }
 }
