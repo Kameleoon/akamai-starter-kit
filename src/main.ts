@@ -6,7 +6,6 @@ import { AkamaiEventSource } from "./eventSource";
 
 // -- Cache the Kameleoon client between requests
 let client: KameleoonClient;
-let isInitialized = false;
 
 export function onClientRequest(request: EW.IngressClientRequest) {
   request.respondWith(
@@ -37,8 +36,8 @@ export async function onClientResponse(
       });
     }
 
-    if (!isInitialized) {
-      isInitialized = await client.initialize();
+    if (!client.isInitialized()) {
+      await client.initialize();
     }
 
     const visitorCode = client.getVisitorCode({
