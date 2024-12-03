@@ -13,8 +13,7 @@ This starter kit provides quickstart instructions for developers using the [Kame
 Make sure you have the following requirements before you get started:
 
 1. A Kameleoon user account. Visit [kameleoon.com](https://www.kameleoon.com/) to learn more.
-2. The [Kameleoon NodeJS SDK](https://developers.kameleoon.com/feature-management-and-experimentation/web-sdks/nodejs-sdk) installed with some feature flags or experiments already configured.
-3. An Akamai Account with EdgeWorkers Acces. For more information, visit the official [Akamai Edgworkers product page here](https://www.akamai.com/products/serverless-computing-edgeworkers).
+2. An Akamai Account with EdgeWorkers Acces. For more information, visit the official [Akamai Edgworkers product page here](https://www.akamai.com/products/serverless-computing-edgeworkers).
 
 ### Set up the edge environment
 
@@ -51,14 +50,14 @@ Once you succesfully have an Akamai EdgeWorker set up, you can clone this starte
 2. Install node modules.
 
 ```
-yarn
+npm i
 ```
 
 3. Add your Kameleoon `SITE_CODE`, `CLIENT_ID` and `CLIENT_SECRET` in `src/constants.ts`. They can be found in the Kameleoon application.
 
 . Add yor Akamai `namespace` which was selected while akamai configuration on the Kameleoon App.
 
-4. Add your edgeKv access-token in `src/edgekv_tokens.js`.
+4. Add your edgeKv access-token in `src/lib/edgekv_tokens.js`.
 
 ```
 // example of edgekv_tokens.js
@@ -83,13 +82,13 @@ export { edgekv_access_tokens };
 5. Build the bundle.
 
 ```
-yarn build
+npm run build
 ```
 
 6. Upload the bundle
 
 ```
-yarn deploy -- {WORKER_ID}
+npm run deploy -- {WORKER_ID}
 ```
 
 7. Activate the version
