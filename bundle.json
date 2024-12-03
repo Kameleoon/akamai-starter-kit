@@ -1,5 +1,5 @@
 {
-  "edgeworker-version": "1.0",
+  "edgeworker-version": "1.0.10",
   "description": "Kameleoon starter kit for Akamai Edgeworkers",
   "config": {
     "logging": {

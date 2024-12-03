@@ -46,7 +46,7 @@ export default {
     copy({
       targets: [
         {
-          src: ["src/edgekv.js", "src/edgekv_tokens.js", "bundle.json"],
+          src: ["bundle.json"],
           dest: "dist",
         },
       ],

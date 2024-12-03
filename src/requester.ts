@@ -5,7 +5,7 @@ import {
   RequestType,
 } from "@kameleoon/nodejs-sdk";
 import { NAMESPACE, GROUP, SITE_CODE } from "./constants";
-import { EdgeKV } from "./edgekv.js";
+import { EdgeKV } from "./lib/edgekv.js";
 
 export class AkamaiWorkerRequester implements IExternalRequester {
   public async sendRequest<T extends RequestType>({
