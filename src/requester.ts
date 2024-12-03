@@ -3,14 +3,15 @@ import {
   IExternalRequester,
   SendRequestParametersType,
   RequestType,
+  KameleoonResponseType,
 } from "@kameleoon/nodejs-sdk";
 import { NAMESPACE, GROUP, SITE_CODE } from "./constants";
 import { EdgeKV } from "./lib/edgekv.js";
 
 export class AkamaiWorkerRequester implements IExternalRequester {
-  public async sendRequest<T extends RequestType>({
+  public async sendRequest({
     requestType,
-  }: SendRequestParametersType<T>) {
+  }: SendRequestParametersType<RequestType>): Promise<KameleoonResponseType> {
     if (requestType === RequestType.Configuration) {
       const ek = new EdgeKV(NAMESPACE, GROUP);
       const config = await ek.getText({ item: SITE_CODE });
@@ -25,9 +26,6 @@ export class AkamaiWorkerRequester implements IExternalRequester {
       }
     }
 
-    return await KameleoonUtils.simulateSuccessRequest(
-      requestType,
-      null as never
-    );
+    return await KameleoonUtils.simulateSuccessRequest(requestType, null);
   }
 }
