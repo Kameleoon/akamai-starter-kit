@@ -13,8 +13,7 @@ This starter kit provides quickstart instructions for developers using the [Kame
 Make sure you have the following requirements before you get started:
 
 1. A Kameleoon user account. Visit [kameleoon.com](https://www.kameleoon.com/) to learn more.
-2. The [Kameleoon NodeJS SDK](https://developers.kameleoon.com/feature-management-and-experimentation/web-sdks/nodejs-sdk) installed with some feature flags or experiments already configured.
-3. An Akamai Account with EdgeWorkers Acces. For more information, visit the official [Akamai Edgworkers product page here](https://www.akamai.com/products/serverless-computing-edgeworkers).
+2. An Akamai Account with EdgeWorkers Acces. For more information, visit the official [Akamai Edgworkers product page here](https://www.akamai.com/products/serverless-computing-edgeworkers).
 
 ### Set up the edge environment
 
@@ -28,58 +27,71 @@ First, you'll set up an Akamai EdgeWorker. For this step, please follow the guid
 
 4. Install the [EdgeWorkers CLI](https://techdocs.akamai.com/edgeworkers/docs/akamai-cli#edgeworkers-cli).
 
-```
-akamai install edgeworkers
-```
-
 5. Setup [Authentication credentials](https://techdocs.akamai.com/developer/docs/set-up-authentication-credentials).
+
+6. Generate [EdgeKv access tooken](https://techdocs.akamai.com/edgekv/docs/generate-and-retrieve-edgekv-access-tokens).
+
+7. Initialize [EdgeKv](https://techdocs.akamai.com/edgekv/docs/akamai-cli) and create namespaces for the Akamai environment you plan to use.
+
+## Setup Akamai integration in Kameleoon APP
+
+1. Go to the [Integrations dashboard](app.kameleoon.com/integrations/dashboard).
+2. Choose the project you’re going to work with and apply your API credentials which you obtained in step 5.
+3. Select Akamai Environment and namespace.
 
 ## Use the Akamai EdgeWorker Starter Kit
 
 The Kameleoon Akamai EdgeWorker Starter Kit uses and extends the [Kameleoon NodeJS SDK](https://developers.kameleoon.com/feature-management-and-experimentation/web-sdks/nodejs-sdk) to provide experimentation and feature flagging on the edge.
 
-> Note: To run the Kameleoon NodeJS SDK on the edge, you need to provide an `externalClientConfiguration`. This can be accomplished either by referencing a local file or using the supplied `getClientConfiguration` helper function to retrieve your Kameleoon project's client configuration. The `externalClientConfiguration` is a JSON file that encapsulates all of your feature flags and experiments. The Kameleoon NodeJS SDK needs this data to implement and monitor your feature flag deployments and experiments.
-
 Once you succesfully have an Akamai EdgeWorker set up, you can clone this starter kit, edit it, build it, and upload the build to your EdgeWorker.
 
-6. Create a new folder and pull the code from this Starter kit.
+1. Create a new folder and pull the code from this Starter kit.
+
+2. Install node modules.
 
 ```
-curl -L https://github.com/Kameleoon/akamai-starter-kit/tarball/main | tar --strip-components=1 -zx
+npm i
 ```
 
-or
+3. Add your Kameleoon `SITE_CODE`, `CLIENT_ID` and `CLIENT_SECRET` in `src/constants.ts`. They can be found in the Kameleoon application.
+
+. Add yor Akamai `namespace` which was selected while akamai configuration on the Kameleoon App.
+
+4. Add your edgeKv access-token in `src/lib/edgekv_tokens.js`.
 
 ```
-wget --no-check-certificate https://github.com/Kameleoon/akamai-starter-kit/tarball/main -O - | tar --strip-components=1 -zx
+// example of edgekv_tokens.js
+
+var edgekv_access_tokens = {
+    "namespace-kameleoon" : {
+      "name": "kameleoon-token",
+      "reference" : "32c17r413-af4d-5da2-1t6s-5aab6013e458"
+    },
+    "namespace-kameleoon2" : {
+      "name": "kameleoon-token2",
+      "reference" : "32c17r413-af4d-5da2-1t6s-5aab6013e458"
+    },
+  }
+
+export { edgekv_access_tokens };
 ```
 
-In the `src` folder of the starter kit, you'll find two Typescript files:
+> Note:
+> Access tokens can be created for multiple namespaces. Each namespace should have its own object with an associated access token. Prefix the token object key with `namespace-` followed by the specific namespace. The full object key should be formatted as `namespace-${namespace}`
 
-- `src/index.ts` contains sample code that fetches and caches the client configuration, initializes the Kameleoon SDK with this configuration and sets the User ID as a variable in request.
-- `src/helpers.ts` contains some additional platform-specific code that demonstrates common features of the Kameleoon SDK.
-
-7. Install node modules.
+5. Build the bundle.
 
 ```
-yarn
+npm run build
 ```
 
-8. Add your Kameleoon `siteCode` and `featureKey` in `src/index.ts`. They can be found in the Kameleoon application.
-
-9. Build the bundle.
+6. Upload the bundle
 
 ```
-yarn build
+npm run deploy -- {WORKER_ID}
 ```
 
-10. Upload the bundle
-
-```
-akamai edgeworkers upload --bundle="dist/bundle.tgz" {WORKER_ID}
-```
-
-11. Activate the version
+7. Activate the version
 
 ```
 akamai edgeworkers activate {WORKER_ID} {ENVIRONMENT} {EDGEWORKER_VERSION}
@@ -89,7 +101,7 @@ akamai edgeworkers activate {WORKER_ID} {ENVIRONMENT} {EDGEWORKER_VERSION}
 - `ENVIRONMENT`: The environment the EdgeWorker is being deployed on.
 - `EDGEWORKER_VERSION`: The custom version of the EdgeWorker as mentioned in `bundle.json`. This should be updated on every new deployment.
 
-12. Enable [Advanced debug headers](https://techdocs.akamai.com/edgeworkers/docs/enable-enhanced-debug-headers) to receive debug logs in the response headers.
+8. Enable [Advanced debug headers](https://techdocs.akamai.com/edgeworkers/docs/enable-enhanced-debug-headers) to receive debug logs in the response headers.
 
 ## Additional Resources and Concepts
 
