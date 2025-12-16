@@ -49,6 +49,7 @@ export async function onClientResponse(
     const variation = client.getVariation({
       visitorCode,
       featureKey: "YOUR_FEATURE_KEY",
+      track: false,
     });
 
     // -- Get the value of the variable from the found feature flag
